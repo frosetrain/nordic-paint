@@ -1,46 +1,58 @@
-/* Nordic Paint v0.0.0 May 13, 2022 */
+/* Nordic Paint v0.0.0 May 23, 2022 */
 
-// Change this value if you wish
+// Default values, feel free to change
 UIScale = 1;
-// These colours were taken from Nord (nordtheme.com)
 brushColours = [
-    "#BF616A",
-    "#D08770",
-    "#EBCB8B",
-    "#A3BE8C",
-    "#88C0D0",
-    "#81A1C1",
-    "#5E81AC",
-    "#B48EAD",
+  "#BF616A",
+  "#D08770",
+  "#EBCB8B",
+  "#A3BE8C",
+  "#88C0D0",
+  "#81A1C1",
+  "#5E81AC",
+  "#B48EAD",
 ];
-// Dark and light theme UI colours
 UIColours = {
-    "dark": ["#2E3440", "#3B4252", "#4C566A", "#D8DEE9"],
-    "light": ["#ECEFF4", "#E5E9F0", "#D8DEE9", "#2E3440"]
+  dark: ["#2E3440", "#3B4252", "#4C566A", "#D8DEE9"],
+  light: ["#ECEFF4", "#E5E9F0", "#D8DEE9", "#2E3440"],
 };
 
 function drawUI() {
-    push();
+  push();
 
-    // bottom bar
-    strokeWeight(0);
-    fill(actualUIColours[1]);
-    rect(0, height - 100 * UIScale, width, 100 * UIScale);
+  // Bottom bar
+  strokeWeight(0);
+  fill(actualUIColours[1]);
+  rect(0, height - 100 * UIScale, width, 100 * UIScale);
 
-    // TODO: Make brushes
+  // TODO: Make brushes
 
-    pop();
-};
+  pop();
+}
 
 function setup() {
-    brushColourID = 0;
-    brushSize = 10;
-    UITheme = "dark";
-    actualUIColours = UIColours[UITheme];
+  createCanvas(windowWidth, windowHeight);
+  
+  // Set the default values
+  brushColourID = 0;
+  brushSize = 10;
+  UITheme = "dark";
+  actualUIColours = UIColours[UITheme];
+  paintingBorder = height - 100 * UIScale
 
-    createCanvas(windowWidth, windowHeight);
-    background(actualUIColours[0]);
+  // Setting up the canvas
+  background(actualUIColours[0]);
+  drawUI();
+  
+  // Applying the variables to the brush
+  stroke(brushColours[brushColourID]);
+  strokeWeight(brushSize)
+  
+  // The code is ready to go!
+}
 
-    drawUI();
-};
-
+function draw() {
+  if (mouseIsPressed && mouseY < paintingBorder) {
+    line(mouseX, mouseY, pmouseX, pmouseY)
+  }
+}
