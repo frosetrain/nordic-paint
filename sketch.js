@@ -52,7 +52,13 @@ function setup() {
 }
 
 function draw() {
-  if (mouseIsPressed && mouseY < paintingBorder) {
+  if (mouseIsPressed && mouseY < paintingBorder && pmouseY < paintingBorder && mouseButton == LEFT) {
     line(mouseX, mouseY, pmouseX, pmouseY)
   }
 }
+
+function mousePressed() {
+  
+}
+
+// TODO: saveCanvas()
