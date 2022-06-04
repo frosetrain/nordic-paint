@@ -1,0 +1,5 @@
+theme: jekyll-theme-cayman
+title: Nordic Paint
+description: A simple paint app written in p5.js and using the Nord colour palette
+show_downloads: false
+# google_analytics: [Insert Google Analytics later]

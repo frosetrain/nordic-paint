@@ -1,0 +1,34 @@
+---
+---
+
+// Headers
+$header-heading-color: #eceff4;
+$header-bg-color: #3b4252;
+$header-bg-color-secondary: #434c5e;
+
+// Text
+$section-headings-color: #88c0d0;
+$body-text-color: #eceff4;
+$body-link-color: #81a1c1;
+$blockquote-text-color: #d8dee9;
+
+// Code
+$code-bg-color: #3b4252;
+$code-text-color: #d8dee9;
+
+// Borders
+$border-color: #3b4252;
+$table-border-color: #434c5e;
+$hr-border-color: #434c5e;
+
+@import "{{ site.theme }}";
+
+body {
+  padding: 0;
+  margin: 0;
+  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: $body-text-color;
+  background-color: #2e3440;
+}
