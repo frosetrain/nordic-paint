@@ -110,7 +110,7 @@ function drawUI() {
 }
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+  createCanvas(windowWidth - 80, windowHeight - 80);
 
   // Setting the default values
   activeBrushColours = [0, 0, 0];
@@ -154,4 +154,3 @@ function mousePressed() {
     drawUI()
   }
 }
-
