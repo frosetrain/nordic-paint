@@ -133,6 +133,10 @@ function setup() {
   // The code is ready to go!
 }
 
+function windowResized() {
+  resizeCanvas(windowWidth - 80, windowHeight - 80);
+}
+
 function draw() {
   if (
     mouseIsPressed &&
