@@ -86,8 +86,23 @@ function drawUI() {
     16
   );
   pop();
-  
-  // Thickness selector thing
+
+  // Brush size selector
+  push();
+  strokeWeight(0);
+  fill(activeUIColours[1]);
+  circle(175, height - 38, 20);
+  rect(190, height - 50, 40, 24, 2);
+  circle(245, height - 38, 20);
+  textFont("Inter");
+  textSize(17);
+  textAlign(CENTER);
+  fill(activeUIColours[3]);
+  text("Size", 210, height - 60);
+  text(brushSizes[activeBrushID], 210, height - 32);
+  text("-", 175, height - 33);
+  text("+", 245, height - 33);
+  pop();
 
   // Setting the variables (yes this isn't really part of "drawing UI")
   if (activeBrushID == 0) {
@@ -100,8 +115,6 @@ function drawUI() {
 }
 
 function setup() {
-  createCanvas(windowWidth - 80, windowHeight - 80);
-
   // Setting the default values
   activeBrushColours = [0, 0, 0];
   activeBrushID = 0;
@@ -109,15 +122,14 @@ function setup() {
   UITheme = "dark";
   activeUIColours = UIColours[UITheme];
 
-  // Setting up the canvas
+  // Creating the canvas
+  createCanvas(windowWidth - 80, windowHeight - 80);
   fill(activeUIColours[0]);
   strokeWeight(0);
   rect(0, 0, width, height, 10);
 
   // Drawing the UI
   drawUI();
-
-  // The code is ready to go!
 }
 
 function draw() {
@@ -138,6 +150,7 @@ function draw() {
 }
 
 function mousePressed() {
+  // Detecting is mouse is in the drawing area
   if (mouseX >= width - 80 && mouseY >= 80 && mouseY <= 180) {
     activeBrushID = Math.round((mouseY - 100) / 60);
     drawUI();
@@ -148,7 +161,9 @@ function mousePressed() {
       strokeWeight(0);
       fill(brushColours[activeBrushColours[activeBrushID]]);
     }
-  } else if (
+  }
+  // Colour selectors
+  else if (
     mouseX >= 15 &&
     mouseX <= 135 &&
     mouseY >= height - 77 &&
@@ -159,6 +174,22 @@ function mousePressed() {
     } else {
       activeBrushColours[activeBrushID] = Math.round((mouseX - 30) / 30) + 4;
     }
+    drawUI();
+  }
+  // Size reducing button
+  else if (
+    dist(mouseX, mouseY, 175, height - 38) <= 20 &&
+    brushSizes[activeBrushID] > 1
+  ) {
+    brushSizes[activeBrushID]--;
+    drawUI();
+    }
+  // Size increasing button
+  else if (
+    dist(mouseX, mouseY, 245, height - 38) <= 20 &&
+    brushSizes[activeBrushID] < 100
+  ) {
+    brushSizes[activeBrushID]++;
     drawUI();
   }
 }
