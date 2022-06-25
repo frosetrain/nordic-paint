@@ -64,4 +64,101 @@ function drawUI() {
   fill(activeUIColours[3]);
   rect(5, -10, 10, 20);
   quad(15, -10, 15, 10, 20, 5, 20, -5);
+  // TODO: Paste a picture of the active stamp shape on the icon
+  rect(20, -5, 10, 10);
+  quad(30, -5, 30, 5, 45, 10, 45, -10);
+  rect(45, -10, 35, 20);
+  pop();
+
+  // Colour selectors
+  push();
+  strokeWeight(0);
+  for (i = 0; i < 8; i++) {
+    fill(brushColours[i]);
+    circle((i % 4) * 30 + 30, height - 30 * Math.floor(i / 4) - 35, 24);
+  }
+  strokeWeight(3);
+  stroke(activeUIColours[0]);
+  fill(0, 0, 0, 0);
+  circle(
+    (activeBrushColours[activeBrushID] % 4) * 30 + 30,
+    height - 30 * Math.floor(activeBrushColours[activeBrushID] / 4) - 35,
+    16
+  );
+  pop();
   
+  // Thickness selector thing
+
+  // Setting the variables (yes this isn't really part of "drawing UI")
+  if (activeBrushID == 0) {
+    stroke(brushColours[activeBrushColours[activeBrushID]]);
+    strokeWeight(brushSizes[activeBrushID]);
+  } else if (activeBrushID == 1) {
+    strokeWeight(0);
+    fill(brushColours[activeBrushColours[activeBrushID]]);
+  }
+}
+
+function setup() {
+  createCanvas(windowWidth - 80, windowHeight - 80);
+
+  // Setting the default values
+  activeBrushColours = [0, 0, 0];
+  activeBrushID = 0;
+  brushSizes = [10, 10];
+  UITheme = "dark";
+  activeUIColours = UIColours[UITheme];
+
+  // Setting up the canvas
+  fill(activeUIColours[0]);
+  strokeWeight(0);
+  rect(0, 0, width, height, 10);
+
+  // Drawing the UI
+  drawUI();
+
+  // The code is ready to go!
+}
+
+function draw() {
+  if (
+    mouseIsPressed &&
+    mouseY < height - 100 &&
+    pmouseY < height - 100 &&
+    mouseX < width - 100 &&
+    pmouseX < width - 100 &&
+    mouseButton == LEFT
+  ) {
+    if (activeBrushID == 0) {
+      line(mouseX, mouseY, pmouseX, pmouseY);
+    } else if (activeBrushID == 1) {
+      circle(mouseX, mouseY, brushSizes[1]);
+    }
+  }
+}
+
+function mousePressed() {
+  if (mouseX >= width - 80 && mouseY >= 80 && mouseY <= 180) {
+    activeBrushID = Math.round((mouseY - 100) / 60);
+    drawUI();
+    if (activeBrushID == 0) {
+      stroke(brushColours[activeBrushColours[activeBrushID]]);
+      strokeWeight(brushSizes[activeBrushID]);
+    } else if (activeBrushID == 1) {
+      strokeWeight(0);
+      fill(brushColours[activeBrushColours[activeBrushID]]);
+    }
+  } else if (
+    mouseX >= 15 &&
+    mouseX <= 135 &&
+    mouseY >= height - 77 &&
+    mouseY <= height - 23
+  ) {
+    if (mouseY > height - 50) {
+      activeBrushColours[activeBrushID] = Math.round((mouseX - 30) / 30);
+    } else {
+      activeBrushColours[activeBrushID] = Math.round((mouseX - 30) / 30) + 4;
+    }
+    drawUI();
+  }
+}
