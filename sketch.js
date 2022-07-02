@@ -150,17 +150,10 @@ function draw() {
 }
 
 function mousePressed() {
-  // Detecting is mouse is in the drawing area
+  // Brush selectors
   if (mouseX >= width - 80 && mouseY >= 80 && mouseY <= 180) {
     activeBrushID = Math.round((mouseY - 100) / 60);
     drawUI();
-    if (activeBrushID == 0) {
-      stroke(brushColours[activeBrushColours[activeBrushID]]);
-      strokeWeight(brushSizes[activeBrushID]);
-    } else if (activeBrushID == 1) {
-      strokeWeight(0);
-      fill(brushColours[activeBrushColours[activeBrushID]]);
-    }
   }
   // Colour selectors
   else if (
