@@ -219,35 +219,29 @@ function drawUI() {
         square(44, height - 44, 13);
         break;
       case 3:
-        image(
-          rickImage,
-          44,
-          height - 44,
-          13,
-          13
-        );
+        image(rickImage, 44, height - 44, 13, 13);
         break;
     }
     pop();
   }
 
   // Clear canvas button
-  push()
-  strokeWeight(0)
-  fill(activeUIColours[1])
-  rect(width - 120, height - 80, 100, 25)
-  rect(width - 120, height - 45, 100, 25)
-  fill(activeUIColours[3])
-  textAlign(CENTER)
-  textFont("Inter")
-  textSize(16)
-  text("Clear", width - 70, height - 62)
+  push();
+  strokeWeight(0);
+  fill(activeUIColours[1]);
+  rect(width - 120, height - 80, 100, 25);
+  rect(width - 120, height - 45, 100, 25);
+  fill(activeUIColours[3]);
+  textAlign(CENTER);
+  textFont("Inter");
+  textSize(16);
+  text("Clear", width - 70, height - 62);
   if (UITheme === "dark") {
-    text("Light Mode", width - 70, height - 28)
+    text("Light Mode", width - 70, height - 28);
   } else if (UITheme === "light") {
-    text("Dark Mode", width - 70, height - 28)
+    text("Dark Mode", width - 70, height - 28);
   }
-  pop()
+  pop();
 
   // Setting the variables (yes this isn't really part of "drawing UI")
   switch (activeBrushID) {
@@ -434,12 +428,12 @@ function mousePressed() {
 }
 
 function keyPressed() {
-  console.log(key)
+  console.log(key);
   if (parseInt(key) >= 1 && parseInt(key) <= 8) {
-    activeBrushColours[activeBrushID] = parseInt(key) - 1
+    activeBrushColours[activeBrushID] = parseInt(key) - 1;
     drawUI();
   } else if (brushKeybinds.includes(key)) {
-    activeBrushID = brushKeybinds.indexOf(key)
+    activeBrushID = brushKeybinds.indexOf(key);
     drawUI();
   } else if (key === "?") {
     window.open("https://frosetrain.github.io/nordic-paint/documentation");
@@ -447,6 +441,6 @@ function keyPressed() {
     fill(activeUIColours[0]);
     strokeWeight(0);
     rect(0, 0, width, height, 10);
-    drawUI()
+    drawUI();
   }
 }
