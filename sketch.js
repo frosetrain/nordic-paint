@@ -28,9 +28,7 @@ let activeBrushID,
   previousClickY;
 
 function preload() {
-  rickImage = loadImage(
-    "https://raw.githubusercontent.com/frosetrain/nordic-paint/main/assets/images/rick.jpg"
-  );
+  rickImage = loadImage("assets/images/rick.jpg");
 }
 
 function drawUI() {
