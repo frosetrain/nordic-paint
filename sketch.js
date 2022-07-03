@@ -15,24 +15,48 @@ const UIColours = {
   dark: ["#2E3440", "#4C566A", "#3B4252", "#D8DEE9"],
   light: ["#ECEFF4", "#E5E9F0", "#D8DEE9", "#2E3440"],
 };
+const brushNames = ["Pen", "Stamp", "Path", "Eraser"]
 
 let activeBrushID,
   UITheme,
   activeUIColours,
   activeBrushColours,
   brushSizes,
+  stampShape,
   previousClickX,
-  previousClickY,
-  turtleDirection,
-  turtleX,
-  turtleY;
+  previousClickY;
 
 function drawUI() {
+  // Top bar
+  push();
+  strokeWeight(0);
+  fill(activeUIColours[2]);
+  rect(0, 0, width, 50, 10);
+  fill(activeUIColours[0])
+  rect(0, 40, width, 10);
+  fill(activeUIColours[3]);
+  textAlign(CENTER)
+  textFont("Inter")
+  textSize(16)
+  text("Nordic Paint", width / 2, 26)
+  fill(activeUIColours[1])
+  circle(width - 20, 20, 25)
+  fill(activeUIColours[3])
+  text("?",  width - 20, 25)
+  pop();
+
   // Side bar
   push();
   strokeWeight(0);
   fill(activeUIColours[2]);
-  rect(width - 100, 50, 110, 300, 10);
+  rect(width - 100, 50, 110, 250, 10);
+  fill(activeUIColours[0]);
+  rect(width - 100, 300, 100, 25)
+  textAlign(CENTER)
+  textFont("Inter")
+  textSize(15)
+  fill(activeUIColours[3])
+  text(brushNames[activeBrushID], width - 50, 320)
   pop();
 
   // Bottom bar
@@ -99,29 +123,13 @@ function drawUI() {
   line(45, -6, 80, 0);
   pop();
 
-  // Brush 3: Turtle
+  // Brush 3: Eraser
   push();
+  strokeWeight(0);
   if (activeBrushID === 3) {
     translate(width - 80, 250);
   } else {
     translate(width - 60, 250);
-  }
-  strokeWeight(0);
-  fill(activeUIColours[3]);
-  triangle(0, 0, 25, -10, 25, 10);
-  stroke(brushColours[activeBrushColours[3]]);
-  strokeWeight(5);
-  strokeCap(SQUARE);
-  line(25, 0, 80, 0);
-  pop();
-
-  // Brush 4: Eraser
-  push();
-  strokeWeight(0);
-  if (activeBrushID === 4) {
-    translate(width - 80, 300);
-  } else {
-    translate(width - 60, 300);
   }
   fill(brushColours[0]);
   rect(0, -10, 20, 20, 2);
@@ -130,38 +138,71 @@ function drawUI() {
   pop();
 
   // Colour selectors
-  push();
-  strokeWeight(0);
-  for (i = 0; i < 8; i++) {
-    fill(brushColours[i]);
-    circle((i % 4) * 30 + 30, height - 30 * Math.floor(i / 4) - 35, 24);
+  if (activeBrushID != 3) {
+   push();
+   strokeWeight(0);
+    for (i = 0; i < 8; i++) {
+      fill(brushColours[i]);
+     circle((i % 4) * 30 + 30, height - 30 * Math.floor(i / 4) - 35, 24);
+    }
+    strokeWeight(3);
+    stroke(activeUIColours[0]);
+    fill(0, 0, 0, 0);
+    circle(
+     (activeBrushColours[activeBrushID] % 4) * 30 + 30,
+      height - 30 * Math.floor(activeBrushColours[activeBrushID] / 4) - 35,
+      16
+    );
+    pop();
   }
-  strokeWeight(3);
-  stroke(activeUIColours[0]);
-  fill(0, 0, 0, 0);
-  circle(
-    (activeBrushColours[activeBrushID] % 4) * 30 + 30,
-    height - 30 * Math.floor(activeBrushColours[activeBrushID] / 4) - 35,
-    16
-  );
-  pop();
 
   // Brush size selector
   push();
+  if (activeBrushID != 3) {
+    translate(160, 0);
+  } else {
+    translate(20, 0)
+  }
   strokeWeight(0);
   fill(activeUIColours[1]);
-  circle(175, height - 38, 20);
-  rect(190, height - 50, 40, 24, 2);
-  circle(245, height - 38, 20);
+  circle(15, height - 38, 20);
+  rect(30, height - 50, 40, 24, 2);
+  circle(85, height - 38, 20);
   textFont("Inter");
   textSize(17);
   textAlign(CENTER);
   fill(activeUIColours[3]);
-  text("Size", 210, height - 60);
-  text(brushSizes[activeBrushID], 210, height - 32);
-  text("-", 175, height - 33);
-  text("+", 245, height - 33);
+  text("Size", 50, height - 60);
+  text(brushSizes[activeBrushID], 50, height - 32);
+  text("-", 15, height - 33);
+  text("+", 85, height - 33);
   pop();
+
+  // Stamp shape chooser
+  if (activeBrushID === 1) {
+    push()
+    translate(280, 0)
+    strokeWeight(0)
+    fill(activeUIColours[1]);
+    circle(15, height - 38, 20);
+    rect(30, height - 50, 40, 24, 2);
+    circle(85, height - 38, 20);
+    textFont("Inter");
+    textSize(17);
+    textAlign(CENTER);
+    fill(activeUIColours[3]);
+    text("Shape", 50, height - 60);
+    text("<", 15, height - 33);
+    text(">", 85, height - 33);
+    switch (stampShape) {
+      case 0:
+        circle(50, height - 38, 13)
+        break;
+      case 1:
+        circle()
+    }
+    pop()
+  }
 
   // Setting the variables (yes this isn't really part of "drawing UI")
   switch (activeBrushID) {
@@ -179,8 +220,8 @@ function drawUI() {
       stroke(brushColours[activeBrushColours[activeBrushID]]);
       break;
     case 3:
+      stroke(activeUIColours[0]);
       strokeWeight(brushSizes[activeBrushID]);
-      stroke(brushColours[activeBrushColours[activeBrushID]]);
       break;
   }
 }
@@ -193,8 +234,7 @@ function setup() {
   brushSizes = [10, 10, 10, 10, 10];
   UITheme = "dark";
   activeUIColours = UIColours[UITheme];
-  turtleDirection = 0;
-  turtleX, (turtleY = width / 2), height / 2;
+  stampShape = 0
 
   // Creating the canvas
   createCanvas(windowWidth - 80, windowHeight - 80);
@@ -214,6 +254,8 @@ function draw() {
     pmouseY < height - 100 &&
     mouseX < width - 100 &&
     pmouseX < width - 100 &&
+    mouseY > 40 &&
+    pmouseY > 40 &&
     mouseButton === LEFT
   ) {
     switch (activeBrushID) {
@@ -224,20 +266,11 @@ function draw() {
         circle(mouseX, mouseY, brushSizes[activeBrushID]);
         break;
       // case 2 isn't here because it's handled in mousePressed()
-      // case 3 gone
+      case 3:
+        line(mouseX, mouseY, pmouseX, pmouseY);
+        break;
     }
   }
-
-  if (keyIsDown(LEFT_ARROW)) {
-    turtleDirection -= 2;
-  } else if (keyIsDown(RIGHT_ARROW)) {
-    turtleDirection += 2;
-  } else if (keyIsDown(UP_ARROW)) {
-    // Convert a polar coordinate (r,θ) to cartesian (x,y): x = r cos(θ), y = r sin(θ)
-    line(turtleX, turtleY, turtleX + Math.cos(turtleDirection) * 10);
-  }
-  
-  text(turtleDirection, 50, 50);
 }
 
 function mousePressed() {
@@ -247,6 +280,8 @@ function mousePressed() {
     pmouseY < height - 100 &&
     mouseX < width - 100 &&
     pmouseX < width - 100 &&
+    mouseY > 40 &&
+    pmouseY > 40 &&
     mouseButton === LEFT &&
     activeBrushID === 2
   ) {
@@ -256,13 +291,19 @@ function mousePressed() {
     previousClickY = mouseY;
   }
 
+  // Help button
+  if (dist(mouseX, mouseY, width - 20, 20) <= 25) {
+    window.open("https://frosetrain.github.io/nordic-paint/documentation");
+  }
+
   // Brush selectors
-  if (mouseX >= width - 80 && mouseY >= 80 && mouseY <= 320) {
+  if (mouseX >= width - 80 && mouseY >= 80 && mouseY <= 270) {
     activeBrushID = Math.round((mouseY - 100) / 50);
     drawUI();
   }
+
   // Colour selectors
-  else if (
+  if (
     mouseX >= 15 &&
     mouseX <= 135 &&
     mouseY >= height - 77 &&
@@ -275,8 +316,9 @@ function mousePressed() {
     }
     drawUI();
   }
+  
   // Size reducing button
-  else if (
+  if (
     dist(mouseX, mouseY, 175, height - 38) <= 20 &&
     brushSizes[activeBrushID] > 1
   ) {
