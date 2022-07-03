@@ -26,6 +26,35 @@ let activeBrushID,
   previousClickX,
   previousClickY;
 
+function star(x, y, diameter) {
+  noLoop();
+  let npoints = 5;
+  let radius1 = diameter / 2;
+  let radius2 = radius1 * 0.3819660113;
+  let angle = TWO_PI / npoints;
+  let halfAngle = angle / 2.0;
+  push();
+  translate(width * (x / width), height * (y / height));
+  x = 0;
+  y = 0;
+  rotate(PI / 10);
+  beginShape();
+  for (let a = 0; a < TWO_PI; a += angle) {
+    let sx = x + cos(a) * radius2;
+    let sy = y + sin(a) * radius2;
+    vertex(sx, sy);
+    sx = x + cos(a + halfAngle) * radius1;
+    sy = y + sin(a + halfAngle) * radius1;
+    vertex(sx, sy);
+  }
+  endShape(CLOSE);
+  pop();
+}
+
+function preload() {
+  rickImage = loadImage('assets/images/rick.jpg');
+}
+
 function drawUI() {
   // Top bar
   push();
@@ -263,7 +292,18 @@ function draw() {
         line(mouseX, mouseY, pmouseX, pmouseY);
         break;
       case 1:
-        circle(mouseX, mouseY, brushSizes[activeBrushID]);
+        switch (stampShape) {
+          case 0:
+            circle(mouseX, mouseY, brushSizes[activeBrushID]);
+          case 1:
+            triangle(mouseX, mouseY - brushSizes[activeBrushID], mouseX - brushSizes[activeBrushID] * 0.6, mouseY, mouseX + brushSizes[activeBrushID] * 0.6, mouseY)
+          case 2:
+            square(mouseX, mouseY, brushSizes[activeBrushID])
+          case 3:
+            star(mouseX, mouseY, brushSizes[activeBrushID])
+          case 4:
+            image(rickImage, mouseX, mouseY, brushSizes[activeBrushID], brushSizes[activeBrushID])
+        }
         break;
       // case 2 isn't here because it's handled in mousePressed()
       case 3:
@@ -317,20 +357,55 @@ function mousePressed() {
     drawUI();
   }
   
-  // Size reducing button
-  if (
-    dist(mouseX, mouseY, 175, height - 38) <= 20 &&
-    brushSizes[activeBrushID] > 1
-  ) {
-    brushSizes[activeBrushID]--;
-    drawUI();
+  // Size changing button
+  if (activeBrushID != 3) {
+    if (
+      dist(mouseX, mouseY, 175, height - 38) <= 20 &&
+      brushSizes[activeBrushID] > 1
+    ) {
+      brushSizes[activeBrushID]--;
+      drawUI();
+    }
+    else if (
+      dist(mouseX, mouseY, 245, height - 38) <= 20 &&
+      brushSizes[activeBrushID] < 100
+    ) {
+      brushSizes[activeBrushID]++;
+      drawUI();
+    }
+  } else if (activeBrushID === 3) {
+    if (
+      dist(mouseX, mouseY, 35, height - 38) <= 20 &&
+      brushSizes[activeBrushID] > 1
+    ) {
+      brushSizes[activeBrushID]--;
+      drawUI();
+    }
+    else if (
+      dist(mouseX, mouseY, 105, height - 38) <= 20 &&
+      brushSizes[activeBrushID] < 100
+    ) {
+      brushSizes[activeBrushID]++;
+      drawUI();
+    }
   }
-  // Size increasing button
-  else if (
-    dist(mouseX, mouseY, 245, height - 38) <= 20 &&
-    brushSizes[activeBrushID] < 100
-  ) {
-    brushSizes[activeBrushID]++;
-    drawUI();
+
+  // Stamp changing button
+  if (activeBrushID === 1) {
+    if (
+      dist(mouseX, mouseY, 295, height - 38) <= 20 &&
+      stampShape > 0
+    ) {
+      stampShape--;
+      drawUI();
+    }
+    else if (
+      dist(mouseX, mouseY, 365, height - 38) <= 20 &&
+      stampShape < 4
+    ) {
+      stampShape++;
+      drawUI();
+    }
   }
+  
 }
