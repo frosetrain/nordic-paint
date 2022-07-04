@@ -28,10 +28,13 @@ let activeBrushID,
   previousClickY;
 
 function preload() {
-  rickImage = loadImage("assets/images/rick.jpg");
+  // rickImage = loadImage("assets/images/rick.jpg");
+  rickImage = loadImage("https://raw.githubusercontent.com/frosetrain/nordic-paint/main/assets/images/rick.jpg");
 }
 
 function drawUI() {
+  console.log("drawUI says: " + brushSizes)
+
   // Top bar
   push();
   strokeWeight(0);
@@ -223,7 +226,7 @@ function drawUI() {
     pop();
   }
 
-  // Clear canvas button
+  // Clear canvas button and dark/light mode button
   push();
   strokeWeight(0);
   fill(activeUIColours[1]);
@@ -423,22 +426,84 @@ function mousePressed() {
       drawUI();
     }
   }
+
+  // Canvas clearing button
+  if (mouseX >= width - 120 && mouseX <= width - 20 && mouseY >= height - 80 && mouseY <= height - 55) {
+    fill(activeUIColours[0]);
+    strokeWeight(0);
+    rect(0, 0, width, height, 10);
+    drawUI();
+  }
+
+  // Dark/light mode button
+  if (mouseX >= width - 120 && mouseY <= width - 20 && mouseY >= height - 45 && mouseY <= height - 20) {
+    if (UITheme === "light") {
+      UITheme = "dark"
+      activeUIColours = UIColours[UITheme];
+      fill(activeUIColours[0]);
+      strokeWeight(0);
+      rect(0, 0, width, height, 10);
+      drawUI()
+    }
+    else if (UITheme === "dark") {
+      UITheme = "light"
+      activeUIColours = UIColours[UITheme];
+      fill(activeUIColours[0]);
+      strokeWeight(0);
+      rect(0, 0, width, height, 10);
+      drawUI()
+    }
+  }
+
+  // rect(width - 120, height - 80, 100, 25);
+  // rect(width - 120, height - 45, 100, 25);
 }
 
 function keyPressed() {
-  console.log(key);
   if (parseInt(key) >= 1 && parseInt(key) <= 8) {
     activeBrushColours[activeBrushID] = parseInt(key) - 1;
     drawUI();
   } else if (brushKeybinds.includes(key)) {
     activeBrushID = brushKeybinds.indexOf(key);
     drawUI();
-  } else if (key === "?") {
-    window.open("https://frosetrain.github.io/nordic-paint/documentation");
-  } else if (key === "Backspace") {
-    fill(activeUIColours[0]);
-    strokeWeight(0);
-    rect(0, 0, width, height, 10);
-    drawUI();
+  } else {
+    switch(key) {
+      case "?":
+        window.open("https://frosetrain.github.io/nordic-paint/documentation");
+      case "Backspace":
+        fill(activeUIColours[0]);
+        strokeWeight(0);
+        rect(0, 0, width, height, 10);
+        drawUI();
+      case "m":
+        if (UITheme === "light") {
+          UITheme = "dark"
+          activeUIColours = UIColours[UITheme];
+          fill(activeUIColours[0]);
+          strokeWeight(0);
+          rect(0, 0, width, height, 10);
+          drawUI()
+        }
+        else if (UITheme === "dark") {
+          UITheme = "light"
+          activeUIColours = UIColours[UITheme];
+          fill(activeUIColours[0]);
+          strokeWeight(0);
+          rect(0, 0, width, height, 10);
+          drawUI()
+        }
+      case "[":
+        if (brushSizes[activeBrushID] > 1) {
+          console.log(brushSizes)
+          brushSizes[activeBrushID]--;
+          console.log(brushSizes)
+          drawUI();
+        }
+      case "]":
+        if (brushSizes[activeBrushID] < 100) {
+          brushSizes[activeBrushID]++;
+          drawUI();
+        }
+    }
   }
 }
