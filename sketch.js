@@ -30,7 +30,9 @@ let activeBrushID,
 
 function preload() {
   // rickImage = loadImage("assets/images/rick.jpg");
-  rickImage = loadImage("https://raw.githubusercontent.com/frosetrain/nordic-paint/main/assets/images/rick.jpg");
+  rickImage = loadImage(
+    "https://raw.githubusercontent.com/frosetrain/nordic-paint/main/assets/images/rick.jpg"
+  );
 }
 
 function drawUI() {
@@ -190,7 +192,7 @@ function drawUI() {
     push();
     translate(280, 0);
     strokeWeight(0);
-    fill(activeUIColours[1])
+    fill(activeUIColours[1]);
     circle(15, height - 38, 20);
     rect(30, height - 50, 40, 24, 2);
     circle(85, height - 38, 20);
@@ -201,7 +203,7 @@ function drawUI() {
     text("Shaky Hand", 50, height - 60);
     text("-", 15, height - 33);
     text("+", 85, height - 33);
-    text(shakyHand, 50, height - 32)
+    text(shakyHand, 50, height - 32);
     pop();
   }
 
@@ -321,7 +323,12 @@ function draw() {
     switch (activeBrushID) {
       case 0:
         if (shakyHand > 0) {
-          line(mouseX + random(-shakyHand * 2, shakyHand * 2), mouseY + random(-shakyHand * 2, shakyHand * 2), pmouseX, pmouseY);
+          line(
+            mouseX + random(-shakyHand * 2, shakyHand * 2),
+            mouseY + random(-shakyHand * 2, shakyHand * 2),
+            pmouseX,
+            pmouseY
+          );
         } else {
           line(mouseX, mouseY, pmouseX, pmouseY);
         }
@@ -461,7 +468,12 @@ function mousePressed() {
   }
 
   // Canvas clearing button
-  if (mouseX >= width - 120 && mouseX <= width - 20 && mouseY >= height - 80 && mouseY <= height - 55) {
+  if (
+    mouseX >= width - 120 &&
+    mouseX <= width - 20 &&
+    mouseY >= height - 80 &&
+    mouseY <= height - 55
+  ) {
     fill(activeUIColours[0]);
     strokeWeight(0);
     rect(0, 0, width, height, 10);
@@ -469,22 +481,26 @@ function mousePressed() {
   }
 
   // Dark/light mode button
-  if (mouseX >= width - 120 && mouseY <= width - 20 && mouseY >= height - 45 && mouseY <= height - 20) {
+  if (
+    mouseX >= width - 120 &&
+    mouseY <= width - 20 &&
+    mouseY >= height - 45 &&
+    mouseY <= height - 20
+  ) {
     if (UITheme === "light") {
-      UITheme = "dark"
+      UITheme = "dark";
       activeUIColours = UIColours[UITheme];
       fill(activeUIColours[0]);
       strokeWeight(0);
       rect(0, 0, width, height, 10);
-      drawUI()
-    }
-    else if (UITheme === "dark") {
-      UITheme = "light"
+      drawUI();
+    } else if (UITheme === "dark") {
+      UITheme = "light";
       activeUIColours = UIColours[UITheme];
       fill(activeUIColours[0]);
       strokeWeight(0);
       rect(0, 0, width, height, 10);
-      drawUI()
+      drawUI();
     }
   }
 
@@ -500,7 +516,7 @@ function keyPressed() {
     activeBrushID = brushKeybinds.indexOf(key);
     drawUI();
   } else {
-    switch(key) {
+    switch (key) {
       case "?":
         window.open("https://frosetrain.github.io/nordic-paint/documentation");
         break;
@@ -512,20 +528,19 @@ function keyPressed() {
         break;
       case "m":
         if (UITheme === "light") {
-          UITheme = "dark"
+          UITheme = "dark";
           activeUIColours = UIColours[UITheme];
           fill(activeUIColours[0]);
           strokeWeight(0);
           rect(0, 0, width, height, 10);
-          drawUI()
-        }
-        else if (UITheme === "dark") {
-          UITheme = "light"
+          drawUI();
+        } else if (UITheme === "dark") {
+          UITheme = "light";
           activeUIColours = UIColours[UITheme];
           fill(activeUIColours[0]);
           strokeWeight(0);
           rect(0, 0, width, height, 10);
-          drawUI()
+          drawUI();
         }
         break;
       case "[":
@@ -546,18 +561,20 @@ function keyPressed() {
           drawUI();
         } else if (activeBrushID === 0 && shakyHand > 0) {
           shakyHand--;
-          drawUI()
+          drawUI();
         }
         break;
       case ".":
         if (activeBrushID === 1 && stampShape < 3) {
           stampShape++;
-          drawUI() 
+          drawUI();
         } else if (activeBrushID === 0 && shakyHand < 3) {
-          shakyHand++
-          drawUI()
+          shakyHand++;
+          drawUI();
         }
         break;
+      case "s":
+        saveCanvas("my-art-drawn-with-nordic-paint", "png")
     }
   }
 }
