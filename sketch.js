@@ -23,6 +23,7 @@ let activeBrushID,
   activeUIColours,
   activeBrushColours,
   brushSizes,
+  shakyHand,
   stampShape,
   previousClickX,
   previousClickY;
@@ -33,8 +34,6 @@ function preload() {
 }
 
 function drawUI() {
-  console.log("drawUI says: " + brushSizes)
-
   // Top bar
   push();
   strokeWeight(0);
@@ -186,6 +185,26 @@ function drawUI() {
   text("+", 85, height - 33);
   pop();
 
+  // Shaky hand toggle
+  if (activeBrushID === 0) {
+    push();
+    translate(280, 0);
+    strokeWeight(0);
+    fill(activeUIColours[1])
+    circle(15, height - 38, 20);
+    rect(30, height - 50, 40, 24, 2);
+    circle(85, height - 38, 20);
+    textFont("Inter");
+    textSize(17);
+    textAlign(CENTER);
+    fill(activeUIColours[3]);
+    text("Shaky Hand", 50, height - 60);
+    text("-", 15, height - 33);
+    text("+", 85, height - 33);
+    text(shakyHand, 50, height - 32)
+    pop();
+  }
+
   // Stamp shape chooser
   if (activeBrushID === 1) {
     push();
@@ -275,6 +294,7 @@ function setup() {
   UITheme = "dark";
   activeUIColours = UIColours[UITheme];
   stampShape = 0;
+  shakyHand = 0;
 
   // Creating the canvas
   createCanvas(windowWidth - 80, windowHeight - 80);
@@ -300,7 +320,11 @@ function draw() {
   ) {
     switch (activeBrushID) {
       case 0:
-        line(mouseX, mouseY, pmouseX, pmouseY);
+        if (shakyHand > 0) {
+          line(mouseX + random(-shakyHand * 2, shakyHand * 2), mouseY + random(-shakyHand * 2, shakyHand * 2), pmouseX, pmouseY);
+        } else {
+          line(mouseX, mouseY, pmouseX, pmouseY);
+        }
         break;
       case 1:
         switch (stampShape) {
@@ -414,15 +438,24 @@ function mousePressed() {
     }
   }
 
+  // Shaky hand button
+  if (activeBrushID === 0) {
+    if (dist(mouseX, mouseY, 295, height - 38) <= 20 && shakyHand > 0) {
+      shakyHand--;
+      drawUI();
+    } else if (dist(mouseX, mouseY, 365, height - 38) <= 20 && shakyHand < 3) {
+      shakyHand++;
+      drawUI();
+    }
+  }
+
   // Stamp changing button
   if (activeBrushID === 1) {
     if (dist(mouseX, mouseY, 295, height - 38) <= 20 && stampShape > 0) {
       stampShape--;
-      console.log(stampShape);
       drawUI();
     } else if (dist(mouseX, mouseY, 365, height - 38) <= 20 && stampShape < 3) {
       stampShape++;
-      console.log(stampShape);
       drawUI();
     }
   }
@@ -470,11 +503,13 @@ function keyPressed() {
     switch(key) {
       case "?":
         window.open("https://frosetrain.github.io/nordic-paint/documentation");
+        break;
       case "Backspace":
         fill(activeUIColours[0]);
         strokeWeight(0);
         rect(0, 0, width, height, 10);
         drawUI();
+        break;
       case "m":
         if (UITheme === "light") {
           UITheme = "dark"
@@ -492,18 +527,37 @@ function keyPressed() {
           rect(0, 0, width, height, 10);
           drawUI()
         }
+        break;
       case "[":
         if (brushSizes[activeBrushID] > 1) {
-          console.log(brushSizes)
           brushSizes[activeBrushID]--;
-          console.log(brushSizes)
           drawUI();
         }
+        break;
       case "]":
         if (brushSizes[activeBrushID] < 100) {
           brushSizes[activeBrushID]++;
           drawUI();
         }
+        break;
+      case ",":
+        if (activeBrushID === 1 && stampShape > 0) {
+          stampShape--;
+          drawUI();
+        } else if (activeBrushID === 0 && shakyHand > 0) {
+          shakyHand--;
+          drawUI()
+        }
+        break;
+      case ".":
+        if (activeBrushID === 1 && stampShape < 3) {
+          stampShape++;
+          drawUI() 
+        } else if (activeBrushID === 0 && shakyHand < 3) {
+          shakyHand++
+          drawUI()
+        }
+        break;
     }
   }
 }
