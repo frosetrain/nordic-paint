@@ -1,4 +1,4 @@
-/* Nordic Paint v0.0.0 July 3, 2022 */
+/* Nordic Paint v1.0.1 */
 
 // Default constants, feel free to change
 const brushColours = [
@@ -317,8 +317,7 @@ function draw() {
     mouseX < width - 100 &&
     pmouseX < width - 100 &&
     mouseY > 40 &&
-    pmouseY > 40 &&
-    mouseButton === LEFT
+    pmouseY > 40
   ) {
     switch (activeBrushID) {
       case 0:
